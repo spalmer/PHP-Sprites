@@ -64,7 +64,7 @@ class Spritesheet {
   		$size 								= getimagesize( $image );
   		$this->image_sizes[]	= $size;
   		$this->total_width 		+= $size[0];
-  		$this->total_height 	= max( $total_height, $size[1] );
+  		$this->total_height 	= max( $this->total_height, $size[1] );
   	}
 
   	foreach( $this->retina_images as $image )
@@ -72,7 +72,7 @@ class Spritesheet {
   		$size 								= getimagesize( $image );
   		$this->retina_image_sizes[]	= $size;
   		$this->total_width 		+= $size[0];
-  		$this->total_height 	= max( $total_height, $size[1] );
+  		$this->total_height 	= max( $this->total_height, $size[1] );
   	}
   	
   	$png = imagecreatetruecolor( $this->total_width, $this->total_height );
