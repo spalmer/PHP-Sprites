@@ -18,7 +18,7 @@ Or import from within your CSS like this:
 
 The only two options are passed along as query string variables:
 
-- `dir` is the path to the folder with the images in it (relative to the PHP file)
+- `dir` is the path to the folder with the images in it (relative to the PHP file and DON'T FORGET THE TRAILING SLASH!)
 - `class` is the "base" CSS class (i.e. "sprite", "ui-sprite")
 
 To reference the sprites in your HTML you'd do it like this for an image named `some-image.png`:
