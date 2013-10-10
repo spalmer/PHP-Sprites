@@ -1,21 +1,32 @@
 <?php
 
+/**
+ * PHP Sprites v0.1
+ *
+ * Terms of Use - PHP Sprites
+ * under the MIT (http://www.opensource.org/licenses/mit-license.php) License.
+ *
+ * Copyright 2013 Steve Palmer All rights reserved.
+ * (https://github.com/spalmer/PHP-Sprites)
+ *
+ */
+ 
 class Spritesheet { 
 
- 	protected $options;
+	protected $options;
   
-  protected $spritePNG;
-  protected $spriteCSS;
+	protected $spritePNG;
+	protected $spriteCSS;
   
-  protected $images = array();
-  protected $image_sizes = array();
-  protected $retina_images = array();
-  protected $retina_image_sizes = array();
+	protected $images = array();
+	protected $image_sizes = array();
+	protected $retina_images = array();
+	protected $retina_image_sizes = array();
 	protected $total_width = 0;
 	protected $total_height = 0;
 
-  protected $css_rules = array();
-  protected $retina_css_rules = array();
+	protected $css_rules = array();
+	protected $retina_css_rules = array();
 
 
   public function __construct( $args = array() ) 
