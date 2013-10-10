@@ -107,10 +107,10 @@ class Spritesheet {
 					$temp_image = imagecreatefromjpeg( $image );
 					break;
 			}
-      imagecopy( $png, $temp_image, $x, 0, 0, 0, $size[0], $size[1] );
-      imagedestroy( $temp_image );
-      
-      $x += $size[0];
+			imagecopy( $png, $temp_image, $x, 0, 0, 0, $size[0], $size[1] );
+			imagedestroy( $temp_image );
+			
+			$x += $size[0];
     		
 		}
 
@@ -129,10 +129,10 @@ class Spritesheet {
 					$temp_image = imagecreatefromjpeg( $image );
 					break;
 			}
-      imagecopy( $png, $temp_image, $x, 0, 0, 0, $size[0], $size[1] );
-      imagedestroy( $temp_image );
-      
-      $x += $size[0];
+			imagecopy( $png, $temp_image, $x, 0, 0, 0, $size[0], $size[1] );
+			imagedestroy( $temp_image );
+			
+			$x += $size[0];
     		
 		}
 		
@@ -207,11 +207,11 @@ class Spritesheet {
 		{
 
 			$css .= '@media only screen and (-webkit-min-device-pixel-ratio: 1.5),  
-        only screen and (   min--moz-device-pixel-ratio: 1.5),  
-        only screen and (     -o-min-device-pixel-ratio: 3/2),  
-        only screen and (        min-device-pixel-ratio: 1.5),  
-        only screen and (min-resolution: 192dpi) { 
-      ';
+  			only screen and (   min--moz-device-pixel-ratio: 1.5),  
+  			only screen and (     -o-min-device-pixel-ratio: 3/2),  
+  			only screen and (  			min-device-pixel-ratio: 1.5),  
+  			only screen and (min-resolution: 192dpi) { 
+			';
 	
 			foreach( $this->retina_css_rules as $selector => $rules )
 			{
