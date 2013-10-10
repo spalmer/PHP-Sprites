@@ -29,8 +29,8 @@ class Spritesheet {
 	protected $retina_css_rules = array();
 
 
-  public function __construct( $args = array() ) 
-  {
+	public function __construct( $args = array() ) 
+	{
   
   	$defaults = array(
   		'dir'			=> 'images/',
