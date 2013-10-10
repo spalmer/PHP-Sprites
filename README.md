@@ -1,6 +1,6 @@
 # PHP Sprites
 
-A simple PHP script that scans a folder of images and spits out a single spritesheet PNG and associated CSS file.
+A dead simple PHP script that scans a folder of images and spits out a single spritesheet PNG and associated CSS file.
 
 ## Usage
 
