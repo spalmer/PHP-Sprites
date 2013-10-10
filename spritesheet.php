@@ -126,7 +126,7 @@ class Spritesheet {
   	}
   	
 		// save the big image
-  	imagepng( $png, $this->spritePNG );
+  	imagepng( $png, $this->spritePNG, 9 );
   	
   }
   
