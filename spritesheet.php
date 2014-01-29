@@ -31,7 +31,6 @@ class Spritesheet {
 
 	public function __construct( $args = array() ) 
 	{
-	
 		$defaults = array(
 			'dir'			=> 'images/',
 			'class'		=> 'sprite',
@@ -45,9 +44,9 @@ class Spritesheet {
 		foreach( $images as $image )
 		{
 			$parts = pathinfo( $image );
-			if( $image != $this->spritePNG ) 
+			if ( $image != $this->spritePNG ) 
 			{
-				if( substr( $parts['filename'], -3 ) == '@2x' )
+				if ( substr( $parts['filename'], -3 ) == '@2x' )
 				{
 					$this->retina_images[] = $image;
 				}
@@ -63,12 +62,12 @@ class Spritesheet {
 	protected function buildSpritePNG() 
 	{
 		// delete old file
-		if( file_exists( $this->spritePNG ) )
+		if ( file_exists( $this->spritePNG ) )
 		{
 			unlink( $this->spritePNG );
 		}
 		
-		if( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;
+		if ( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;
 		
 		foreach( $this->images as $image )
 		{
@@ -144,7 +143,7 @@ class Spritesheet {
 	protected function buildSpriteCSS()
 	{
 		// delete old file
-		if( file_exists( $this->spriteCSS ) )
+		if ( file_exists( $this->spriteCSS ) )
 		{
 			unlink( $this->spriteCSS );
 		}	
@@ -156,7 +155,7 @@ class Spritesheet {
 		
 		$x = 0;
 		
-		if( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;
+		if ( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;
 		
 		foreach( $this->images as $index => $image )
 		{
@@ -203,7 +202,7 @@ class Spritesheet {
 		}
 		
 		// retina rules
-		if( sizeof( $this->retina_css_rules ))
+		if ( sizeof( $this->retina_css_rules ))
 		{
 
 			$css .= '@media only screen and (-webkit-min-device-pixel-ratio: 1.5),	
@@ -249,20 +248,33 @@ class Spritesheet {
 	{
 		header('Content-Type: text/css');
 		
-		if( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;	
-	
-		$files = array_combine( $this->images, array_map( "filemtime", $this->images ) );
-		arsort($files);	
-		$images_mtime = current( $files );
+		if ( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) 
+		{
+			echo '/* There are no images in this folder! */';
+			return;
+		}	
 		
-		$files = array_combine( $this->retina_images, array_map( "filemtime", $this->retina_images ) );
-		arsort($files);	
-		$retina_images_mtime = current( $files );
+		$images_mtime = 0;
+		$retina_images_mtime = 0;
+	
+		$files = @array_combine( @$this->images, array_map( "filemtime", @$this->images ) );
+		if ( is_array( $files ) && sizeof( $files ) )
+		{
+			arsort($files);	
+			$images_mtime = current( $files );
+		}
+		
+		$files = @array_combine( @$this->retina_images, array_map( "filemtime", @$this->retina_images ) );
+		if ( is_array( $files ) && sizeof( $files ) )
+		{
+			arsort($files);	
+			$retina_images_mtime = current( $files );
+		}
 		
 		$latest = max( $images_mtime, $retina_images_mtime );
 		
 		// rebuild if necessary
-		if( 
+		if ( 
 			! file_exists( $this->spritePNG ) || 
 			filemtime( $this->spritePNG ) < $latest || 
 			! file_exists( $this->spriteCSS ) || 
