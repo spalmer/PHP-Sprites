@@ -149,8 +149,10 @@ class Spritesheet {
 		}	
 	
 		$this->css_rules[ '.' . $this->options['class'] ] = array(
-			'display' 					=> 'inline-block',
-			'background-image' 	=> 'url("' . $this->spritePNG . '")',
+			'display' 						=> 'inline-block',
+			'background-image' 		=> 'url("' . $this->spritePNG . '")',
+			'background-repeat'		=> 'no-repeat',
+			'background-position' => 'top left',
 		);
 		
 		$x = 0;
@@ -168,7 +170,7 @@ class Spritesheet {
 				'background-position'	=> '-' . $x . 'px 0px',
 			);
 			
-			$x += $size[0];
+			$x += ceil( $size[0] / 2 ) * 2; // multiple of 2
 		}
 
 		foreach( $this->retina_images as $index => $image )
@@ -177,13 +179,13 @@ class Spritesheet {
 			$parts = pathinfo( $image );
 			
 			$this->retina_css_rules[ '.' . str_replace( array( '.', ' ', '#', '>', '+' ), '-', substr( $parts['filename'], 0, -3 ) ) ] = array(
-				'width' 							=> floor( $size[0] / 2 ) . 'px',
-				'height' 							=> floor( $size[1] / 2 ) . 'px',
+				'width' 							=> ceil( $size[0] / 2 ) . 'px',
+				'height' 							=> ceil( $size[1] / 2 ) . 'px',
 				'background-position'	=> '-' . ( $x / 2 ) . 'px 0px',
 				'background-size'			=> floor( $this->total_width / 2 ) . 'px ' . floor( $this->total_height / 2 ) . 'px',
 			);
 			
-			$x += $size[0];
+			$x += ceil( $size[0] / 2 ) * 2; // multiple of 2
 		}
 		
 		$css = '';
