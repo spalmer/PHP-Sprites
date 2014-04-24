@@ -34,6 +34,7 @@ class Spritesheet {
 		$defaults = array(
 			'dir'			=> 'images/',
 			'class'		=> 'sprite',
+			'gutter'	=> 10,
 		);
 		$this->options = array_merge( $defaults, $args );
 		
@@ -61,6 +62,11 @@ class Spritesheet {
 
 	protected function buildSpritePNG() 
 	{
+		$gutter = $this->options['gutter'];
+		$row_width = 0;
+		$row_height = 0;
+		$first_row_height = 0;
+		
 		// delete old file
 		if ( file_exists( $this->spritePNG ) )
 		{
@@ -69,28 +75,45 @@ class Spritesheet {
 		
 		if ( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;
 		
+		// regular images
 		foreach( $this->images as $image )
 		{
-			$size 								= getimagesize( $image );
-			$this->image_sizes[]	= $size;
-			$this->total_width 		+= $size[0];
-			$this->total_height 	= max( $this->total_height, $size[1] );
+			$size 							= getimagesize( $image );
+			$this->image_sizes[]= $size;
+			$row_width					+= $size[0];
+			$row_height					= max( $row_height, $size[1] );
 		}
 
+		$this->total_width 		= $row_width + $gutter * sizeof( $this->images );
+		$this->total_height 	= $row_height + $gutter;
+		$row_width						= 0;
+		$row_height						= 0;
+		$first_row_height			= $this->total_height;
+
+		// retina images
 		foreach( $this->retina_images as $image )
 		{
-			$size 								= getimagesize( $image );
+			$size 							= getimagesize( $image );
 			$this->retina_image_sizes[]	= $size;
-			$this->total_width 		+= $size[0];
-			$this->total_height 	= max( $this->total_height, $size[1] );
+			$row_width					+= $size[0];
+			$row_height					= max( $row_height, $size[1] );
 		}
+
+		$this->total_width 		= max( $this->total_width, $row_width + $gutter * sizeof( $this->retina_images ) );
+		$this->total_height 	+= $row_height + $gutter;
 		
+		// create png image
 		$png = imagecreatetruecolor( $this->total_width, $this->total_height );
 		imagealphablending( $png, FALSE );
+		$fill = imagecolorallocatealpha( $png, 255, 255, 255, 127 );
+		imagefilledrectangle( $png, 0, 0, $this->total_width, $this->total_height, $fill );
 		imagesavealpha( $png, TRUE );							
 		
+		// set positions
 		$x = 0;
+		$y = 0;
 		
+		// place images
 		foreach( $this->images as $index => $image )
 		{
 			$size = $this->image_sizes[$index];
@@ -106,12 +129,17 @@ class Spritesheet {
 					$temp_image = imagecreatefromjpeg( $image );
 					break;
 			}
-			imagecopy( $png, $temp_image, $x, 0, 0, 0, $size[0], $size[1] );
+			imagecopy( $png, $temp_image, $x, $y, 0, 0, $size[0], $size[1] );
+			imagealphablending( $png, TRUE );
 			imagedestroy( $temp_image );
 			
-			$x += $size[0];
+			$x += $size[0] + $gutter;
 				
 		}
+		
+		// reset positions
+		$x = 0;
+		$y += $first_row_height + $gutter;
 
  		foreach( $this->retina_images as $index => $image )
 		{
@@ -128,20 +156,27 @@ class Spritesheet {
 					$temp_image = imagecreatefromjpeg( $image );
 					break;
 			}
-			imagecopy( $png, $temp_image, $x, 0, 0, 0, $size[0], $size[1] );
+			imagecopy( $png, $temp_image, $x, $y, 0, 0, $size[0], $size[1] );
+			imagealphablending( $png, TRUE );
 			imagedestroy( $temp_image );
 			
-			$x += $size[0];
+			$x += $size[0] + $gutter;
 				
 		}
 		
 		// save the big image
+		imagealphablending( $png, FALSE );
+		imagesavealpha( $png, TRUE );			
 		imagepng( $png, $this->spritePNG, 9 );
 		
 	}
 	
 	protected function buildSpriteCSS()
 	{
+		$gutter = $this->options['gutter'];
+		$row_width = 0;
+		$row_height = 0;
+		
 		// delete old file
 		if ( file_exists( $this->spriteCSS ) )
 		{
@@ -156,22 +191,27 @@ class Spritesheet {
 		);
 		
 		$x = 0;
+		$y = 0;
 		
 		if ( sizeof( $this->images ) == 0 && sizeof( $this->retina_images ) == 0 ) return;
 		
 		foreach( $this->images as $index => $image )
 		{
 			$size = $this->image_sizes[$index];
+			$row_height = max( $row_height, $size[0] );
 			$parts = pathinfo( $image );
 			
 			$this->css_rules[ '.' . str_replace( array( '.', ' ', '#', '>', '+' ), '-', $parts['filename'] ) ] = array(
 				'width' 							=> $size[0] . 'px',
 				'height' 							=> $size[1] . 'px',
-				'background-position'	=> '-' . $x . 'px 0px',
+				'background-position'	=> '-' . ( $x + $index * $gutter ) . 'px -' . $y . 'px',
 			);
 			
 			$x += ceil( $size[0] / 2 ) * 2; // multiple of 2
 		}
+		
+		$x = 0;
+		$y += ceil( $row_height / 2 ) * 2;
 
 		foreach( $this->retina_images as $index => $image )
 		{
@@ -181,7 +221,7 @@ class Spritesheet {
 			$this->retina_css_rules[ '.' . str_replace( array( '.', ' ', '#', '>', '+' ), '-', substr( $parts['filename'], 0, -3 ) ) ] = array(
 				'width' 							=> ceil( $size[0] / 2 ) . 'px',
 				'height' 							=> ceil( $size[1] / 2 ) . 'px',
-				'background-position'	=> '-' . ( $x / 2 ) . 'px 0px',
+				'background-position'	=> '-' . ( ( $x + $index * $gutter ) / 2 ) . 'px -' . ( ( $y + $gutter ) / 2 ) . 'px',
 				'background-size'			=> floor( $this->total_width / 2 ) . 'px ' . floor( $this->total_height / 2 ) . 'px',
 			);
 			
