@@ -16,10 +16,11 @@ Or import from within your CSS like this:
 @import url("spritesheet.php?dir=images/&class=sprite");
 ```
 
-The only two options are passed along as query string variables:
+The options are passed along as query string variables:
 
 - `dir` is the path to the folder with the images in it (relative to the PHP file and __don't forget the trailing slash__)
-- `class` is the "base" CSS class (i.e. "sprite", "ui-sprite")
+- `class` is the "base" CSS class for all sprites (default is "sprite")
+- `gutter` is the amount of space in pixels between each image in the sprite sheet (default is 10)
 
 To reference the sprites in your HTML you'd do it like this for an image named `some-image.png`:
 
