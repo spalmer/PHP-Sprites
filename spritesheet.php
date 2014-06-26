@@ -198,7 +198,7 @@ class Spritesheet {
 		foreach( $this->images as $index => $image )
 		{
 			$size = $this->image_sizes[$index];
-			$row_height = max( $row_height, $size[0] );
+			$row_height = max( $row_height, $size[1] );
 			$parts = pathinfo( $image );
 			
 			$this->css_rules[ '.' . str_replace( array( '.', ' ', '#', '>', '+' ), '-', $parts['filename'] ) ] = array(
