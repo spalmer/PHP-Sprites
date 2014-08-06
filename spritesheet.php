@@ -38,8 +38,8 @@ class Spritesheet {
 		);
 		$this->options = array_merge( $defaults, $args );
 		
-		$this->spritePNG = $this->options['dir'] . $this->options['class'] . '.png';
-		$this->spriteCSS = $this->options['dir'] . $this->options['class'] . '.css';
+		$this->spritePNG = $this->options['class'] . '.png';
+		$this->spriteCSS = $this->options['class'] . '.css';
 		
 		$images = glob( $this->options['dir'] . '*.{png,gif,jpg,jpeg}', GLOB_BRACE );
 		foreach( $images as $image )
@@ -133,7 +133,7 @@ class Spritesheet {
 			imagealphablending( $png, TRUE );
 			imagedestroy( $temp_image );
 			
-			$x += $size[0] + $gutter;
+			$x += ceil( $size[0] / 2 ) * 2 + $gutter;
 				
 		}
 		
@@ -160,7 +160,7 @@ class Spritesheet {
 			imagealphablending( $png, TRUE );
 			imagedestroy( $temp_image );
 			
-			$x += $size[0] + $gutter;
+			$x += ceil( $size[0] / 2 ) * 2 + $gutter;
 				
 		}
 		
@@ -332,6 +332,7 @@ class Spritesheet {
 	}
 
 } // end class
+
 
 $sprites = new Spritesheet( $_GET );
 $sprites->output();
