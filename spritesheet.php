@@ -139,7 +139,7 @@ class Spritesheet {
 		
 		// reset positions
 		$x = 0;
-		$y += $first_row_height + $gutter;
+		$y += $first_row_height;
 
  		foreach( $this->retina_images as $index => $image )
 		{
